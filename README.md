@@ -1,4 +1,4 @@
-# green-light
+# Parent pick-up coordinator
 Dedicated to the frontend 
 
 ## Authors/Contributors
