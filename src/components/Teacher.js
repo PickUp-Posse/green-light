@@ -5,6 +5,10 @@ import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router-dom';
 import superagent from 'superagent';
 import io from 'socket.io-client';
+import { connect } from 'react-redux';
+// import { populateStudents, updateStatus } from '../store/students-reducer.js';
+
+// const mapDispatchToProps = { populateStudents, updateStatus };
 
 const TeacherPage = (props) => {
   const [name, setName] = useState('');
@@ -75,4 +79,11 @@ const TeacherPage = (props) => {
   )
 }
 
-export default withRouter(TeacherPage);
+const mapStateToProps = state => ({
+  state,
+  allStudents: state.studentStore.students
+})
+
+export default connect(mapStateToProps)(TeacherPage);
+
+// export default withRouter(TeacherPage);
