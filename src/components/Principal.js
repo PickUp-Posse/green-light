@@ -12,15 +12,15 @@ const PrincipalPage = (props) => {
   }
   const startParentPickup = () => {
     console.log('Parent Pickup')
-    const host = io('http://localhost:3001', { transports: ['websocket'] });
-    const principal = io.connect(host);
-    principal.emit('connection');
-    console.log('inside dataEntry');
-    superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
-      .then(response => {
-        console.log('Line 11 response body', response.body);
-      })
-
+    // const host = io('http://localhost:3001', { transports: ['websocket'] });
+    // const principal = io.connect(host);
+    // principal.emit('connection');
+    // console.log('inside dataEntry');
+    // superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
+    //   .then(response => {
+    //     console.log('Line 11 response body', response.body);
+    //   })
+    props.history.push('/principalPickup');
   }
   return (
     <>
