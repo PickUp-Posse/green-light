@@ -40,6 +40,31 @@ const PrincipalPickupPage = (props) => {
     props.updateStatus(pickupId, 'pickupReady')
   }
 
+  const sendStudent = (student) => {
+    console.log('PRINCIPALPICKUP sendStudent: ', 'studentID ', student.studentID);
+    //Match to teacher
+    let teacher = student.teacher;
+    console.log('PRINCIPALPICKUP sendStudent: ', 'teacher ', teacher);
+    //Get sibling ID's
+    let siblings = student.siblings;
+    //if siblings exist, get all teachers /////////////NOT SURE IF THIS NEXT PIECE OF LOGIC WORKS!!!
+    let sibTeachers = [];
+    if(siblings){
+      let numSiblings = siblings.length;
+      for (let i=0; i<numSiblings; i++){
+        props.allStudents.filter(student => {
+          if(student.studentID === siblings[i]){
+            return sibTeachers.push[student.teacher];
+          }
+        })
+      }
+    }
+    console.log('PRINCIPALPICKUP sendStudent: ', {sibTeachers});
+
+    //TODO: Use teacher to send socket message, use sibTeachers to send socket message
+    
+  }
+
   useEffect (() => {
     console.log('PRINCIPALPICKUP useEffect: ', 'props.state ', props.state, 'props.allStudents ', props.allStudents);
   })
@@ -52,7 +77,7 @@ const PrincipalPickupPage = (props) => {
         <Button type='submit'>Submit</Button>
       </form>
       <div>
-        <p>{chosenChild.name}</p>
+        <Button onClick={()=> sendStudent(chosenChild)}>Send out: {chosenChild.name}</Button>
       </div>
     </>
   )
