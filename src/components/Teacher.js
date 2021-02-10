@@ -23,8 +23,8 @@ const TeacherPage = (props) => {
     e.preventDefault();
     const teacherName = teacherNameRef.current.value;
     console.log('TEACHER NAME: ', teacherName);
-    // const host = io('http://localhost:3001', { transports: ['websocket'] });
-    // const principal = io.connect(host);
+    const host = io('http://localhost:3001', { transports: ['websocket'] });
+    const principal = io.connect(host);
     // principal.emit('connection');
     let students = await superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
       .then(response => {

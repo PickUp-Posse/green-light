@@ -7,9 +7,10 @@ import io from 'socket.io-client';
 
 const DataEntry = (props) => {
   const getAll = () => {
+    // const host = 'http://localhost:3001';
     const host = io('http://localhost:3001', { transports: ['websocket'] });
     const principal = io.connect(host);
-    principal.emit('connection');
+    // principal.emit('connection');
     console.log('inside dataEntry');
     superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
       .then(response => {
