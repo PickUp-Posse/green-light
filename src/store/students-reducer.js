@@ -40,7 +40,7 @@ const studentReducer = (state=initialState, action) => {
       })
       console.log('STUDENT-REDUCER studentReducer update after: ', {tempArray});
 
-      return {student: tempArray};
+      return {students: tempArray};
 
     default:
       return state;
