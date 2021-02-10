@@ -16,8 +16,8 @@ const PrincipalPage = (props) => {
   }
   const startParentPickup = async () => {
     console.log('Parent Pickup')
-    const host = io('http://localhost:3001', { transports: ['websocket'] });
-    const principal = io.connect(host);
+    // const host = io('http://localhost:3001', { transports: ['websocket'] });
+    // const principal = io.connect(host);
     // principal.emit('connection');
     console.log('inside dataEntry');
     let currentStudents = await superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
