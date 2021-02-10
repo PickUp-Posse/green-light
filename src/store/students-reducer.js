@@ -28,7 +28,7 @@ const studentReducer = (state=initialState, action) => {
     
     case 'UPDATE':
       console.log('STUDENT-REDUCER studentReducer update ', {payload});
-      let id = payload.id;
+      let id = parseInt(payload.id);
       let status = payload.status;
 
       let tempArray = state.students.map(student => {
