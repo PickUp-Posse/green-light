@@ -3,7 +3,7 @@ let initialState = {
 }
 
 export const populateStudents = (studentsFromApi) => {
-  // console.log('STUDENT-REDUCER populateStudents: ', {studentsFromApi});
+  console.log('STUDENT-REDUCER populateStudents: ', {studentsFromApi});
   return {
     type: 'POPULATE',
     payload: studentsFromApi
@@ -11,7 +11,7 @@ export const populateStudents = (studentsFromApi) => {
 }
 
 export const updateStatus = (id, status) => {
-  // console.log('STUDENT-REDUCER updateStatus: ', {id}, {status});
+  console.log('STUDENT-REDUCER updateStatus: ', {id}, {status});
   return {
     type: 'UPDATE',
     payload: {id, status}
@@ -19,15 +19,15 @@ export const updateStatus = (id, status) => {
 }
 
 const studentReducer = (state=initialState, action) => {
-  // console.log('STUDENT-REDUCER studentReducer: ', {state}, {action});
+  console.log('STUDENT-REDUCER studentReducer: ', {state}, {action});
   let { type, payload } = action;
   switch (type) {
     case 'POPULATE':
-      // console.log('STUDENT-REDUCER studentReducer populate ', {payload});
+      console.log('STUDENT-REDUCER studentReducer populate ', {payload});
       return {...state, students: payload};
     
     case 'UPDATE':
-      // console.log('STUDENT-REDUCER studentReducer update ', {payload});
+      console.log('STUDENT-REDUCER studentReducer update ', {payload});
       let id = parseInt(payload.id);
       let status = payload.status;
 
@@ -38,7 +38,7 @@ const studentReducer = (state=initialState, action) => {
           return {...student}
         }
       })
-      // console.log('STUDENT-REDUCER studentReducer update after: ', {tempArray});
+      console.log('STUDENT-REDUCER studentReducer update after: ', {tempArray});
 
       return {students: tempArray};
 

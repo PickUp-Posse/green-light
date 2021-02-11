@@ -6,13 +6,13 @@ import { withRouter } from 'react-router-dom';
 import superagent from 'superagent';
 import io from 'socket.io-client';
 import { connect } from 'react-redux';
-// import { populateStudents, updateStatus } from '../store/students-reducer.js';
+import { populateStudents, updateStatus } from '../store/students-reducer.js';
 
-// const mapDispatchToProps = { populateStudents, updateStatus };
+const mapDispatchToProps = { populateStudents, updateStatus };
 
 const TeacherPage = (props) => {
   const [name, setName] = useState('');
-  const [classRoster, setClassRoster] = useState([]);
+  // const [classRoster, setClassRoster] = useState([]);
   const teacherNameRef = React.createRef();
   const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
   host.on('pickupready', (payload) => {
@@ -39,7 +39,8 @@ const TeacherPage = (props) => {
         return item;
       }
     })
-    setClassRoster(filteredStudents);
+    // setClassRoster(filteredStudents);
+    props.populateStudents(filteredStudents);
   }
 
   const searchName = (e) => {
@@ -67,7 +68,7 @@ const TeacherPage = (props) => {
   return (
 
     <>
-      { console.log('inside return', classRoster)}
+      {/* { console.log('inside return', classRoster)} */}
       <Button onClick={updateStudent}>Update Student</Button>
 
       <form onSubmit={classList}>
@@ -75,7 +76,7 @@ const TeacherPage = (props) => {
         <Button type='submit'>Submit</Button>
       </form>
       <div>
-        {classRoster.map((student, idx) => (
+        {props.classRoster.map((student, idx) => (
           <div key={idx}>
             <p onClick={() => studentReleased(student)}>{student.name}</p>
           </div>
@@ -88,9 +89,9 @@ const TeacherPage = (props) => {
 
 const mapStateToProps = state => ({
   state,
-  allStudents: state.studentStore.students
+  classRoster: state.studentStore.students
 })
 
-export default connect(mapStateToProps)(TeacherPage);
+export default connect(mapStateToProps, mapDispatchToProps)(TeacherPage);
 
 // export default withRouter(TeacherPage);
