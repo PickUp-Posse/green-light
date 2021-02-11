@@ -7,9 +7,14 @@ import Principal from './components/Principal';
 import Teacher from './components/Teacher';
 import DataEntry from './components/DataEntry';
 import PrincipalPickup from './components/PrincipalPickup';
+import AddStudent from './components/AddStudent';
+import DeleteStudent from './components/DeleteStudent';
+import Header from './components/Header';
 
 function App() {
   return (
+    <>
+    <Header/>
     <Switch>
       <Route path='/' component={IndexPage} exact />
       <Route path='/login' component={Login} exact />
@@ -18,7 +23,10 @@ function App() {
       <Route path='/teacher' component={Teacher} exact />
       <Route path='/dataEntry' component={DataEntry} exact />
       <Route path='/principalPickup' component={PrincipalPickup} exact />
+      <Route path='/add' component={AddStudent} exact />
+      <Route path='/delete' component={DeleteStudent} exact />
     </Switch>
+    </>
   );
 }
 

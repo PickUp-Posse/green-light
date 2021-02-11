@@ -10,10 +10,16 @@ import Chip from '@material-ui/core/Chip';
 const mapDispatchToProps = { populateStudents };
 
 const PrincipalPage = (props) => {
-  const dataEntryHandler = () => {
-    console.log('DATA')
-    props.history.push('/dataEntry');
+  const dataEntryHandler = async () => {
+    console.log('going to data entry');
+    let currentStudents = await superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
+      .then(response => {
+        return response.body;
+      })
 
+    props.populateStudents(currentStudents);
+    props.history.push('/dataEntry');
+    console.log(currentStudents);
   }
   const startParentPickup = async () => {
     console.log('Parent Pickup')
