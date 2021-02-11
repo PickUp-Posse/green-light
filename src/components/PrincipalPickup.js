@@ -11,6 +11,11 @@ const mapDispatchToProps = { populateStudents, updateStatus };
 const PrincipalPickupPage = (props) => {
   const [chosenChild, setChosenChild] = useState({});
   const pickupIdRef = React.createRef();
+  const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
+
+  host.on('sendingstudent', (payload) => {
+    console.log('student is being sent out from teacher: ', payload.name, payload.teacher);
+  })
 
   const pickUpStudent = (e) => {
     e.preventDefault();
@@ -46,14 +51,11 @@ const PrincipalPickupPage = (props) => {
 
 
     //TODO: Use teacher to send socket message, use sibTeachers to send socket message
-    console.log('student', student);
-    const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
-    // host.emit('connection', () => {
-    //   console.log('principal connecting')
-    // })
-    host.emit('pickupready', student);
-    props.history.push('/principal');
+    // console.log('student', student);
 
+    host.emit('joinRoom', teacher);
+    console.log('principal has joined room: ', teacher);
+    host.emit('pickupready', student);
   }
 
   useEffect (() => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 //import FormGroup from '@material-ui/core/FormGroup';
 //import Input from '@material-ui/core/Input';
@@ -14,18 +14,18 @@ const TeacherPage = (props) => {
   const [name, setName] = useState('');
   const [classRoster, setClassRoster] = useState([]);
   const teacherNameRef = React.createRef();
+  const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
+  host.on('pickupready', (payload) => {
+    console.log('this is the pickup on teacher', payload.name);
+  })
   const updateStudent = () => {
-    // console.log('Clicked on registration')
     props.history.push('/dataEntry');
-
   }
   const classList = async (e) => {
     e.preventDefault();
     const teacherName = teacherNameRef.current.value;
     // console.log('TEACHER NAME: ', teacherName);
-    const host = io('http://localhost:3001', { transports: ['websocket'] });
-    const principal = io.connect(host);
-    // principal.emit('connection');
+    joinRoom(teacherName);
     let students = await superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
       .then(response => {
         return response.body;
@@ -33,7 +33,6 @@ const TeacherPage = (props) => {
       .catch(err => {
         console.error(err);
       });
-    console.log('Line 31 students', students);
     // eslint-disable-next-line array-callback-return
     let filteredStudents = students.filter((item) => {
       if (item.teacher === teacherName) {
@@ -41,7 +40,6 @@ const TeacherPage = (props) => {
       }
     })
     setClassRoster(filteredStudents);
-    console.log('Line 33: Whats happening?', filteredStudents);
   }
 
   const searchName = (e) => {
@@ -50,31 +48,22 @@ const TeacherPage = (props) => {
     setName(teacherName);
   }
 
+  const joinRoom = (teacherName) => {
+    // const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
+    host.emit('joinRoom', (teacherName));
+    console.log(`${teacherName} has joined a room`);
+  }
+
   const studentReleased = (student) => {
     // console.log('TODO: make magic happen like a check mark');
     console.log(student);
-    // const sendStudent = (student) => {
-    // console.log('TEACHER sendStudent: ', 'studentID ', student.studentID);
     //Match to teacher
     let teacher = student.teacher;
-    // console.log('TEACHER sendStudent: ', 'teacher ', teacher);
-
-
     //TODO: Use teacher to send socket message, use sibTeachers to send socket message
-    // console.log('student', student);
-    const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
-    // host.emit('connection', () => {
-    //   console.log(`${teacher} is connecting`)
-    // })
     host.emit('sendingstudent', student);
-    // props.history.push('/principal');
-
-  // }
 
   }
-  // useEffect() => {
 
-  // }
   return (
 
     <>
