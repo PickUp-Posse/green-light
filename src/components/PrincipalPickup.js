@@ -11,14 +11,16 @@ import { populateStudents, updateStatus } from '../store/students-reducer.js';
 const mapDispatchToProps = { populateStudents, updateStatus };
 
 const PrincipalPickupPage = (props) => {
-  // let studentArray = [];
-  const [studentArray, setStudentArray] = useState([]);
+  // let pickupReadyStudents = [];
+  const [pickupReadyStudents, setPickupReadyStudents] = useState([]);
+  const [releasedFromClassStudents, setReleasedFromClassStudents] = useState([]);
   const [chosenChild, setChosenChild] = useState({});
   const pickupIdRef = React.createRef();
   const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
 
   host.on('sendingstudent', (payload) => {
-    console.log('student is being sent out from teacher: ', payload.name, payload.teacher);
+    console.log('student is being sent out from teacher: ', payload.name, payload.teacher, payload.studentStatus);
+    props.updateStatus(payload.studentID, payload.studentStatus);
   })
 
   const pickUpStudent = (e) => {
@@ -28,13 +30,32 @@ const PrincipalPickupPage = (props) => {
     let chosenStudent = props.allStudents.filter((child) => {
       if (child.studentID === parseInt(pickupId)) return child;
     })
+    chosenStudent[0].studentStatus = 'pickupReady';
     setChosenChild(chosenStudent[0]);
-    let tempArray = studentArray;
+    let tempArray = pickupReadyStudents;
     tempArray.unshift(chosenStudent[0])
-    setStudentArray(tempArray);
+    setPickupReadyStudents(tempArray);
     console.log('Student Array: ', tempArray)
     props.updateStatus(pickupId, 'pickupReady')
+    // updatepickupReadyStudents();
   }
+
+  // const updatepickupReadyStudents = () => {
+  useEffect (()=> {
+    console.log('PRINCIPALPICKUP useEffect: before ', {pickupReadyStudents});
+    let studentsInProcess = props.allStudents.filter(student => {
+      if(student.studentStatus === 'pickupReady') return student;
+    }) 
+    setPickupReadyStudents(studentsInProcess);
+    console.log('PRINCIPALPICKUP useEffect: after ', {pickupReadyStudents});
+
+    console.log('PRINCIPALPICKUP useEffect: before ', {releasedFromClassStudents});
+    let releasedStudents = props.allStudents.filter(student => {
+      if(student.studentStatus === 'releasedFromClass') return student;
+    }) 
+    setReleasedFromClassStudents(releasedStudents);
+    console.log('PRINCIPALPICKUP useEffect: after ', {releasedFromClassStudents});
+  },[props.allStudents])
 
   const sendStudent = (student) => {
     // console.log('PRINCIPALPICKUP sendStudent: ', 'studentID ', student.studentID);
@@ -78,9 +99,23 @@ const PrincipalPickupPage = (props) => {
         <Button type='submit'>Submit</Button>
       </form>
       <div>
-
         <div>
-          {studentArray.map((student, idx) => (
+          {pickupReadyStudents.map((student, idx) => (
+            <div key={idx}>
+              <Chip
+                onClick={() => sendStudent(student)}
+                variant="outlined"
+                size="medium"
+                icon={<FaceIcon />}
+                label={`Send out ${student.name}`}
+                clickable
+                color="secondary"
+              />
+            </div>
+          ))}
+        </div>
+        <div>
+          {releasedFromClassStudents.map((student, idx) => (
             <div key={idx}>
               <Chip
                 onClick={() => sendStudent(student)}
@@ -93,9 +128,7 @@ const PrincipalPickupPage = (props) => {
               />
             </div>
           ))}
-
         </div>
-
       </div>
     </>
   )
