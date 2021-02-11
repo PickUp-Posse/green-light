@@ -3,12 +3,16 @@ import superagent from 'superagent';
 import io from 'socket.io-client';
 import { withRouter } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import FaceIcon from '@material-ui/icons/Face';
 import { connect } from 'react-redux';
 import { populateStudents, updateStatus } from '../store/students-reducer.js';
 
 const mapDispatchToProps = { populateStudents, updateStatus };
 
 const PrincipalPickupPage = (props) => {
+  // let studentArray = [];
+  const [studentArray, setStudentArray] = useState([]);
   const [chosenChild, setChosenChild] = useState({});
   const pickupIdRef = React.createRef();
   const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
@@ -25,6 +29,10 @@ const PrincipalPickupPage = (props) => {
       if (child.studentID === parseInt(pickupId)) return child;
     })
     setChosenChild(chosenStudent[0]);
+    let tempArray = studentArray;
+    tempArray.unshift(chosenStudent[0])
+    setStudentArray(tempArray);
+    console.log('Student Array: ', tempArray)
     props.updateStatus(pickupId, 'pickupReady')
   }
 
@@ -58,7 +66,7 @@ const PrincipalPickupPage = (props) => {
     host.emit('pickupready', student);
   }
 
-  useEffect (() => {
+  useEffect(() => {
     console.log('PRINCIPALPICKUP useEffect: ', 'props.state ', props.state, 'props.allStudents ', props.allStudents);
   })
 
@@ -70,7 +78,24 @@ const PrincipalPickupPage = (props) => {
         <Button type='submit'>Submit</Button>
       </form>
       <div>
-        <Button onClick={()=> sendStudent(chosenChild)}>Send out: {chosenChild.name}</Button>
+
+        <div>
+          {studentArray.map((student, idx) => (
+            <div key={idx}>
+              <Chip
+                onClick={() => sendStudent(student)}
+                variant="outlined"
+                size="medium"
+                icon={<FaceIcon />}
+                label={`Send out ${student.name}`}
+                clickable
+                color="primary"
+              />
+            </div>
+          ))}
+
+        </div>
+
       </div>
     </>
   )
