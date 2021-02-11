@@ -15,9 +15,12 @@ const TeacherPage = (props) => {
   // const [classRoster, setClassRoster] = useState([]);
   const teacherNameRef = React.createRef();
   const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
+  
   host.on('pickupready', (payload) => {
-    console.log('this is the pickup on teacher', payload.name);
+    console.log('this is the pickup on teacherPage, student:', payload.name);
+    props.updateStatus(payload.studentID, payload.studentStatus);
   })
+
   const updateStudent = () => {
     props.history.push('/dataEntry');
   }
@@ -57,13 +60,20 @@ const TeacherPage = (props) => {
 
   const studentReleased = (student) => {
     // console.log('TODO: make magic happen like a check mark');
-    console.log(student);
+    console.log('TEACHER studentReleased: ', {student});
     //Match to teacher
+    student.studentStatus = 'releasedFromClass';
+    console.log('TEACHER studentReleased: updatedStatus ', {student});
+    props.updateStatus(student.ID, student.studentStatus);
     let teacher = student.teacher;
     //TODO: Use teacher to send socket message, use sibTeachers to send socket message
     host.emit('sendingstudent', student);
 
   }
+
+  useEffect(() => {
+    console.log('TEACHER useEffect: ', 'props.classRoster', props.classRoster);
+  })
 
   return (
 

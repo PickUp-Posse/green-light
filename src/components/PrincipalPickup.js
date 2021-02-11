@@ -28,6 +28,7 @@ const PrincipalPickupPage = (props) => {
     let chosenStudent = props.allStudents.filter((child) => {
       if (child.studentID === parseInt(pickupId)) return child;
     })
+    chosenStudent[0].studentStatus = 'pickupReady';
     setChosenChild(chosenStudent[0]);
     let tempArray = studentArray;
     tempArray.unshift(chosenStudent[0])
