@@ -6,35 +6,16 @@ import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { populateStudents, updateStatus } from '../store/students-reducer.js';
 
-
 const mapDispatchToProps = { populateStudents, updateStatus };
 
 const PrincipalPickupPage = (props) => {
-  // const [studentList, setStudentList] = useState([]);
   const [chosenChild, setChosenChild] = useState({});
   const pickupIdRef = React.createRef();
-  // const host = io('http://localhost:3001', { transports: ['websocket'] });
-  // const principal = io.connect(host);
-  // useEffect(() => {
-  //   async function fetchData() {
-      // const host = io('http://localhost:3001', { transports: ['websocket'] });
-      // const principal = io.connect(host);
-      // principal.emit('connection');
-  //     // console.log('inside dataEntry');
-  //     let students = await superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
-  //       .then(response => {
-  //         return response.body;
-  //       })
-  //     setStudentList(students);
-  //   }
-  //   fetchData();
-
-  // }, []);
 
   const pickUpStudent = (e) => {
     e.preventDefault();
     const pickupId = pickupIdRef.current.value;
-    console.log('ID: ', pickupId);
+    // console.log('ID: ', pickupId);
     let chosenStudent = props.allStudents.filter((child) => {
       if (child.studentID === parseInt(pickupId)) return child;
     })
@@ -43,10 +24,10 @@ const PrincipalPickupPage = (props) => {
   }
 
   const sendStudent = (student) => {
-    console.log('PRINCIPALPICKUP sendStudent: ', 'studentID ', student.studentID);
+    // console.log('PRINCIPALPICKUP sendStudent: ', 'studentID ', student.studentID);
     //Match to teacher
     let teacher = student.teacher;
-    console.log('PRINCIPALPICKUP sendStudent: ', 'teacher ', teacher);
+    // console.log('PRINCIPALPICKUP sendStudent: ', 'teacher ', teacher);
     //Get sibling ID's
     let siblings = student.siblings;
     //if siblings exist, get all teachers /////////////NOT SURE IF THIS NEXT PIECE OF LOGIC WORKS!!!
@@ -66,28 +47,18 @@ const PrincipalPickupPage = (props) => {
 
     //TODO: Use teacher to send socket message, use sibTeachers to send socket message
     console.log('student', student);
-    const host = io('http://localhost:3001', { transports: ['websocket'] });
-    const principal = io.connect(`${host}/principal`); //connecting 
-    // principal.emit('connection');
-    // principal.emit('pickupready');
-    principal.emit('pickupready');
+    const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
+    // host.emit('connection', () => {
+    //   console.log('principal connecting')
+    // })
+    host.emit('pickupready', student);
     props.history.push('/principal');
 
   }
 
   useEffect (() => {
     console.log('PRINCIPALPICKUP useEffect: ', 'props.state ', props.state, 'props.allStudents ', props.allStudents);
-    // const host = io('http://localhost:3001');
-    const host = io("http://localhost:3001", {
-      withCredentials: true,
-      extraHeaders: {
-      "my-custom-header": "abcd"
-  }})
-    const genPrincipal = io.connect(host);
-    const principal = io.connect(`${host}/principal`);
-    principal.emit('pickupready');
-    genPrincipal.emit('pickupready');
-  }, [])
+  })
 
   return (
     <>

@@ -15,14 +15,14 @@ const TeacherPage = (props) => {
   const [classRoster, setClassRoster] = useState([]);
   const teacherNameRef = React.createRef();
   const updateStudent = () => {
-    console.log('Clicked on registration')
+    // console.log('Clicked on registration')
     props.history.push('/dataEntry');
 
   }
   const classList = async (e) => {
     e.preventDefault();
     const teacherName = teacherNameRef.current.value;
-    console.log('TEACHER NAME: ', teacherName);
+    // console.log('TEACHER NAME: ', teacherName);
     const host = io('http://localhost:3001', { transports: ['websocket'] });
     const principal = io.connect(host);
     // principal.emit('connection');
@@ -45,13 +45,31 @@ const TeacherPage = (props) => {
   }
 
   const searchName = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     let teacherName = e.target.value;
     setName(teacherName);
   }
 
-  const studentReleased = (studentID) => {
-    console.log('TODO: make magic happen like a check mark');
+  const studentReleased = (student) => {
+    // console.log('TODO: make magic happen like a check mark');
+    console.log(student);
+    // const sendStudent = (student) => {
+    // console.log('TEACHER sendStudent: ', 'studentID ', student.studentID);
+    //Match to teacher
+    let teacher = student.teacher;
+    // console.log('TEACHER sendStudent: ', 'teacher ', teacher);
+
+
+    //TODO: Use teacher to send socket message, use sibTeachers to send socket message
+    // console.log('student', student);
+    const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
+    // host.emit('connection', () => {
+    //   console.log(`${teacher} is connecting`)
+    // })
+    host.emit('sendingstudent', student);
+    // props.history.push('/principal');
+
+  // }
 
   }
   // useEffect() => {
@@ -70,7 +88,7 @@ const TeacherPage = (props) => {
       <div>
         {classRoster.map((student, idx) => (
           <div key={idx}>
-            <p onClick={studentReleased}>{student.name}</p>
+            <p onClick={() => studentReleased(student)}>{student.name}</p>
           </div>
         ))}
 
