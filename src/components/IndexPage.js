@@ -3,20 +3,20 @@ import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router-dom';
 
 const IndexPage = (props) => {
-  const registerHandler = () => {
-    console.log('Clicked on registration')
-    props.history.push('/registration');
+  const signUpHandler = () => {
+    console.log('Clicked on signup')
+    props.history.push('/signup');
 
   }
-  const loginHandler = () => {
-    console.log('Clicked on login')
-    props.history.push('/login');
+  const signInHandler = () => {
+    console.log('Clicked on signin')
+    props.history.push('/signin');
 
   }
   return (
     <>
-      <Button onClick={registerHandler}>Register</Button>
-      <Button onClick={loginHandler}>Login</Button>
+      <Button onClick={signUpHandler}>Sign up</Button>
+      <Button onClick={signInHandler}>Sign in</Button>
     </>
   )
 }
