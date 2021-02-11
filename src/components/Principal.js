@@ -5,6 +5,7 @@ import superagent from 'superagent';
 // import io from 'socket.io-client';
 import { connect } from 'react-redux';
 import { populateStudents } from '../store/students-reducer.js';
+import Chip from '@material-ui/core/Chip';
 
 const mapDispatchToProps = { populateStudents };
 
@@ -21,13 +22,13 @@ const PrincipalPage = (props) => {
       .then(response => {
         return response.body;
       })
-    
-      props.populateStudents(currentStudents);
+
+    props.populateStudents(currentStudents);
 
     props.history.push('/principalPickup');
   }
 
-  useEffect (() => {
+  useEffect(() => {
     // console.log('PRINCIPAL useEffect: ', 'props.state ', props.state, 'props.allStudents ', props.allStudents);
   })
 
