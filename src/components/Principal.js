@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import superagent from 'superagent';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import { connect } from 'react-redux';
 import { populateStudents } from '../store/students-reducer.js';
 
@@ -16,9 +16,6 @@ const PrincipalPage = (props) => {
   }
   const startParentPickup = async () => {
     console.log('Parent Pickup')
-    // const host = io('http://localhost:3001', { transports: ['websocket'] });
-    // const principal = io.connect(host);
-    // principal.emit('connection');
     console.log('inside dataEntry');
     let currentStudents = await superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
       .then(response => {
