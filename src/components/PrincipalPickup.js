@@ -16,7 +16,9 @@ const PrincipalPickupPage = (props) => {
   const [releasedFromClassStudents, setReleasedFromClassStudents] = useState([]);
   const [chosenChild, setChosenChild] = useState({});
   const pickupIdRef = React.createRef();
-  const host = io.connect('http://localhost:3001', { transports: ['websocket'] });
+
+  const host = io.connect('https://parent-pickup-coordinator.herokuapp.com/', { transports: ['websocket'] }); //USE THIS ONE FOR DEPLOYMENT
+  // const host = io.connect('http://localhost:3001', { transports: ['websocket'] }); //USE THIS ONE FOR TESTING
 
   host.on('sendingstudent', (payload) => {
     console.log('student is being sent out from teacher: ', payload.name, payload.teacher, payload.studentStatus);
@@ -25,6 +27,7 @@ const PrincipalPickupPage = (props) => {
 
   const pickUpStudent = (e) => {
     e.preventDefault();
+    e.target.reset();
     const pickupId = pickupIdRef.current.value;
     // console.log('ID: ', pickupId);
     let chosenStudent = props.allStudents.filter((child) => {
