@@ -19,7 +19,6 @@ const PrincipalPage = (props) => {
     console.log('inside dataEntry');
     let currentStudents = await superagent.get('https://parent-pickup-coordinator.herokuapp.com/student')
       .then(response => {
-        console.log('Line 11 response body', response.body);
         return response.body;
       })
     
@@ -29,7 +28,7 @@ const PrincipalPage = (props) => {
   }
 
   useEffect (() => {
-    console.log('PRINCIPAL useEffect: ', 'props.state ', props.state, 'props.allStudents ', props.allStudents);
+    // console.log('PRINCIPAL useEffect: ', 'props.state ', props.state, 'props.allStudents ', props.allStudents);
   })
 
   return (
