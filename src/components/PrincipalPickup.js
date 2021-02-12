@@ -33,10 +33,12 @@ const PrincipalPickupPage = (props) => {
   const pickUpStudent = (e) => {
     e.preventDefault();
     const pickupId = pickupIdRef.current.value;
+    // const pickupId = e.target.studentNum.value;
     console.log('ID: ', pickupId);
     let chosenStudent = props.allStudents.filter((child) => {
       if (child.studentID === parseInt(pickupId)) return child;
     })
+    console.log('CHOSENT Student: ', chosenStudent);
     chosenStudent[0].studentStatus = 'pickupReady';
     setChosenChild(chosenStudent[0]);
     let tempArray = pickupReadyStudents;
@@ -132,22 +134,25 @@ const PrincipalPickupPage = (props) => {
 
       <Card id="teacher-card" >
 
-        <form onSubmit={pickUpStudent}>
+      <form onSubmit={pickUpStudent}>
+         <input type='text' ref={pickupIdRef} placeholder="Enter Student ID #" style={{marginLeft: 13}}/>
+        <Button className={classes.root} type='submit'>Find Student</Button>
+      </form>
+
+        {/* <form onSubmit={pickUpStudent}>
 
           <TextField
-            //onSubmit={pickUpStudent}
             ref={pickupIdRef}
             id="outlined-with-placeholder"
             label="Enter Student ID"
-            placeholder="Placeholder"
             className={classes.textField}
             margin="normal"
             variant="outlined"
+            name="studentNum"
           />
-// we removed the onSubmit that was previously placed on the button
           <Button className={classes.root} type='submit'>Find Student</Button>
-        </form>
-        <div>
+        </form> */}
+        
          <div>
           {waitingStudents.map((student, idx) => (
             <div key={idx}>
@@ -164,7 +169,7 @@ const PrincipalPickupPage = (props) => {
             </div>
           ))}
         </div>
-        <div>
+        
           <div>
             {pickupReadyStudents.map((student, idx) => (
               <div key={idx}>
@@ -197,64 +202,8 @@ const PrincipalPickupPage = (props) => {
               </div>
             ))}
           </div>
-        </div>
+        
       </Card>
-
-//       <form onSubmit={pickUpStudent}>
-//         <input type='text' ref={pickupIdRef} placeholder="Enter Student ID #"/>
-//         <Button type='submit'>Find Student</Button>
-//       </form>
-//        <div>
-//          <div>
-//           {waitingStudents.map((student, idx) => (
-//             <div key={idx}>
-//               <Chip
-//                 onClick={() => sendStudent(student)}
-//                 variant="outlined"
-//                 size="medium"
-//                 icon={<FaceIcon />}
-//                 label={`Send out ${student.name}`}
-//                 clickable
-//                 color="default"
-//                 // style={{borderColor: 'gray', borderWidth: 2, margin: 3, marginLeft: 10}}
-//               />
-//             </div>
-//           ))}
-//         </div>
-//         <div>
-//           {pickupReadyStudents.map((student, idx) => (
-//             <div key={idx}>
-//               <Chip
-//                 onClick={() => sendStudent(student)}
-//                 variant="outlined"
-//                 size="medium"
-//                 icon={<FaceIcon />}
-//                 label={`${student.name} has been requested.`}
-//                 clickable
-//                 color="default"
-//                 style={{borderColor: 'red', borderWidth: 2, margin: 3, marginLeft: 10}}
-//               />
-//             </div>
-//           ))}
-//         </div>
-//         <div>
-//           {releasedFromClassStudents.map((student, idx) => (
-//             <div key={idx}>
-//               <Chip
-//                 onClick={() => sendStudent(student)}
-//                 variant="outlined"
-//                 size="medium"
-//                 icon={<FaceIcon />}
-//                 label={`${student.name} is on the way out.`}
-//                 clickable
-//                 color="default"
-//                 style={{borderColor: 'green', borderWidth: 2, margin: 3, marginLeft: 10}}
-//               />
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
     </>
   )
 }
@@ -292,4 +241,59 @@ export default connect(mapStateToProps, mapDispatchToProps)(PrincipalPickupPage)
 // export default withRouter(PrincipalPickupPage);
 
 
-// if studentList.studentID === pickupIdRef then student name will populate in <p> else === <div>
+
+
+       {/* <form onSubmit={pickUpStudent}>
+         <input type='text' ref={pickupIdRef} placeholder="Enter Student ID #"/>
+        <Button type='submit'>Find Student</Button>
+      </form>
+        <div>
+         <div>
+           {waitingStudents.map((student, idx) => (
+             <div key={idx}>
+               <Chip
+                 onClick={() => sendStudent(student)}
+                 variant="outlined"
+                 size="medium"
+                 icon={<FaceIcon />}
+                 label={`Send out ${student.name}`}
+                 clickable
+                 color="default"
+                 // style={{borderColor: 'gray', borderWidth: 2, margin: 3, marginLeft: 10}}
+               />
+             </div>
+           ))}
+         </div>
+         <div>
+           {pickupReadyStudents.map((student, idx) => (
+             <div key={idx}>
+               <Chip
+                 onClick={() => sendStudent(student)}
+                 variant="outlined"
+                 size="medium"
+                 icon={<FaceIcon />}
+                 label={`${student.name} has been requested.`}
+                 clickable
+                 color="default"
+                 style={{borderColor: 'red', borderWidth: 2, margin: 3, marginLeft: 10}}
+               />
+             </div>
+           ))}
+         </div>
+         <div>
+           {releasedFromClassStudents.map((student, idx) => (
+             <div key={idx}>
+               <Chip
+                 onClick={() => sendStudent(student)}
+                 variant="outlined"
+                 size="medium"
+                 icon={<FaceIcon />}
+                 label={`${student.name} is on the way out.`}
+                 clickable
+                 color="default"
+                 style={{borderColor: 'green', borderWidth: 2, margin: 3, marginLeft: 10}}
+               />
+             </div>
+           ))}
+         </div>
+       </div> */}
