@@ -6,6 +6,8 @@ import superagent from 'superagent';
 import { connect } from 'react-redux';
 import { populateStudents } from '../store/students-reducer.js';
 import Chip from '@material-ui/core/Chip';
+import Card from '@material-ui/core/Card';
+
 
 const mapDispatchToProps = { populateStudents };
 
@@ -40,8 +42,10 @@ const PrincipalPage = (props) => {
 
   return (
     <>
-      <Button onClick={dataEntryHandler}>Student Records</Button>
-      <Button onClick={startParentPickup}>Start Pickup</Button>
+      <Card id="teacher-card" >
+        <Button class="button" onClick={dataEntryHandler}>Student Records</Button>
+        <Button class="button" onClick={startParentPickup}>Start Pickup</Button>
+      </Card>
     </>
   )
 }

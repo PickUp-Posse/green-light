@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import './IndexPage.scss';
-import Image from './assets/classroom.jpg';
+import Image from './assets/classroom.PNG';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -13,8 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 const styles = {
   paperContainer: {
     backgroundImage: `url(${Image})`,
-    // width: '100%',
-    // height: '100%',
+
   }
 };
 
