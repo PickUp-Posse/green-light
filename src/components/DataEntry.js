@@ -40,9 +40,9 @@ const DataEntry = (props) => {
     setAllStudentsData(studentsFromDB);
   }
 
-  const updateStudent = (e) => {
+  const updateStudent = () => {
 
-    e.preventDefault();
+    // e.preventDefault();
     const studentId = pickupIdRef.current.value;
     console.log('DATAENTRY updateStudent ID: ', studentId);
     let chosenStudent = allStudentsData.filter((child) => {
@@ -122,60 +122,84 @@ const DataEntry = (props) => {
     setItem({});
   };
 
+  const retrieve = () => {
+    console.log('DATAENTRY retrieve', pickupIdRef.current.value);
+    updateStudent();
+    setRetrieveStudentForm(true)
+  }
+
+  const add = () => {
+    console.log('DATAENTRY add', pickupIdRef.current.value);
+    updateStudent();
+    setAddStudentForm(true)
+  }
+
+  const update = () => {
+    console.log('DATAENTRY update', pickupIdRef.current.value);
+    updateStudent();
+    setUpdateStudentForm(true)
+  }
+
+  const deleteChosen = () => {
+    console.log('DATAENTRY deleteChosen', pickupIdRef.current.value);
+    updateStudent();
+    setDeleteStudentForm(true)
+  }
+
   return (
     <div>
       <h1>Update Student</h1>
       {/* <Button onClick={getAll}>Get All Students</Button> */}
-      <form onSubmit={updateStudent}>
+      <form>
         <input type='text' ref={pickupIdRef} placeholder="Enter Student ID #"/>
-        <Button onClick={()=> setRetrieveStudentForm(true)} type='submit'>Retrieve Student Record</Button>
-        <Button onClick={()=> setAddStudentForm(true)} type='submit'>Add Student Record</Button>
-        <Button onClick={()=> setUpdateStudentForm(true)} type='submit'>Update Student Record</Button>
-        <Button onClick={()=> setDeleteStudentForm(true)} type='submit'>Delete Student Record</Button>
+        <Button onClick={retrieve} type='button'>Retrieve Student Record</Button>
+        <Button onClick={add} type='button'>Add Student Record</Button>
+        <Button onClick={update} type='button'>Update Student Record</Button>
+        <Button onClick={deleteChosen} type='button'>Delete Student Record</Button>
       </form>
       {/* <Button onClick={() => updateOneStudent('6021cb7e516cc7085e551726')}>Make Student Change</Button> */}
 
 
     {(retrieveStudentForm === false) ? <div></div> :
-      <Form onSubmit={() => handleUpdate(chosenChild)} >
+      <Form>
         <Form.Group>
           <Form.Label>Current Student Record</Form.Label>
         </Form.Group>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Student Name</Form.Label>
-          <Form.Control name="studentName" type="text" defaultValue={chosenChild.name} onChange={handleInputChange}></Form.Control>
+          <Form.Control name="studentName" type="text" defaultValue={chosenChild.name} disabled="disabled"></Form.Control>
         </Form.Group>
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Student ID</Form.Label>
-          <Form.Control type="number" min="0" name="studentID" defaultValue={chosenChild.studentID} onChange={handleInputChange}></Form.Control>
+          <Form.Control type="number" min="0" name="studentID" defaultValue={chosenChild.studentID} disabled="disabled"></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Grade</Form.Label>
-          <Form.Control defaultValue={chosenChild.grade} type="number" min="0" name="grade" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.grade} type="number" min="0" name="grade" disabled="disabled"></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Teacher</Form.Label>
-          <Form.Control defaultValue={chosenChild.teacher} type="text" name="teacher" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.teacher} type="text" name="teacher" disabled="disabled"></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Parents</Form.Label>
-          <Form.Control defaultValue={chosenChild.parents} type="text" name="parents" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.parents} type="text" name="parents" disabled="disabled"></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Bus Route</Form.Label>
-          <Form.Control defaultValue={chosenChild.busRoute} type="text" name="busRoute" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.busRoute} type="text" name="busRoute" disabled="disabled"></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>District</Form.Label>
-          <Form.Control defaultValue={chosenChild.district} type="text" name="district" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.district} type="text" name="district" disabled="disabled"></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>School Name</Form.Label>
-          <Form.Control defaultValue={chosenChild.schoolName} type="text" name="schoolName" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.schoolName} type="text" name="schoolName" disabled="disabled"></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Siblings(Enter Sibling ID#)</Form.Label>
-          <Form.Control defaultValue={chosenChild.siblings} type="text" name="siblings" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.siblings} type="text" name="siblings" disabled="disabled"></Form.Control>
         </Form.Group>
         <Button onClick={()=> setRetrieveStudentForm(false)} variant="primary" type="submit">Close Detail View</Button>
       </Form>
