@@ -26,7 +26,7 @@ const TeacherPage = (props) => {
 
   // const host = io.connect('https://parent-pickup-coordinator.herokuapp.com/', { transports: ['websocket'] }); //USE THIS ONE FOR DEPLOYMENT
 
-  const host = io.connect('http://localhost:3000', { transports: ['websocket'] }); //USE THIS ONE FOR TESTING
+  const host = io.connect('http://localhost:3001', { transports: ['websocket'] }); //USE THIS ONE FOR TESTING
 
 
   host.on('pickupready', (payload) => {
@@ -136,10 +136,11 @@ const TeacherPage = (props) => {
                   onClick={() => studentReleased(student)}
                   variant="outlined"
                   size="medium"
-                  icon={<FaceIcon />}
+                  icon={<FaceIcon/>}
                   label={`${student.name}`}
                   clickable
-                  color="secondary"
+                  color="default"
+                  style={{borderColor: 'red', borderWidth: 2, margin: 3, marginLeft: 10}}
                 />
               </div>
             ))}
@@ -155,7 +156,8 @@ const TeacherPage = (props) => {
                   icon={<FaceIcon />}
                   label={`${student.name}`}
                   clickable
-                  color="gray"
+                  color="default"
+                  style={{borderColor: 'gray', borderWidth: 2, margin: 3, marginLeft: 10}}
                 />
               </div>
             ))}
@@ -168,10 +170,11 @@ const TeacherPage = (props) => {
                   onClick={() => studentReleased(student)}
                   variant="outlined"
                   size="medium"
-                  icon={<FaceIcon />}
+                  icon={<FaceIcon/>}
                   label={`${student.name}`}
                   clickable
-                  color="primary"
+                  color="default"
+                  style={{borderColor: 'green', borderWidth: 2, margin: 3, marginLeft: 10}}
                 />
               </div>
             ))}
