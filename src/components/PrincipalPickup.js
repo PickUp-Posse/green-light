@@ -14,6 +14,8 @@ const PrincipalPickupPage = (props) => {
   // let pickupReadyStudents = [];
   const [pickupReadyStudents, setPickupReadyStudents] = useState([]);
   const [releasedFromClassStudents, setReleasedFromClassStudents] = useState([]);
+  const [waitingStudents, setWaitingStudents] = useState([]);
+  
   const [chosenChild, setChosenChild] = useState({});
   const pickupIdRef = React.createRef();
 
@@ -37,14 +39,26 @@ const PrincipalPickupPage = (props) => {
     let tempArray = pickupReadyStudents;
     tempArray.unshift(chosenStudent[0])
     setPickupReadyStudents(tempArray);
-    console.log('Student Array: ', tempArray)
-    props.updateStatus(pickupId, 'pickupReady')
-    // updatepickupReadyStudents();
+    // console.log('Student Array: ', tempArray)
+    props.updateStatus(pickupId, 'classRoom')
+    
     // e.target.reset(); THIS WILL BREAK IT DO NOT USE!!!!!!!!!!!!!!!!!!!
   }
 
-  // const updatepickupReadyStudents = () => {
+  
   useEffect (()=> {
+    console.log('PRINCIPALPICKUP useEffect: before ', {waitingStudents});
+    let studentsWaiting = props.allStudents.filter(student => {
+      if(student.studentStatus === 'classRoom') return student;
+    }) 
+
+    let firstStudent = studentsWaiting.filter(student => {
+      if(student.studentID === chosenChild.studentID) return student;
+    })
+
+    setWaitingStudents(firstStudent);
+    console.log('PRINCIPALPICKUP useEffect: after ', {waitingStudents});
+
     console.log('PRINCIPALPICKUP useEffect: before ', {pickupReadyStudents});
     let studentsInProcess = props.allStudents.filter(student => {
       if(student.studentStatus === 'pickupReady') return student;
@@ -60,7 +74,13 @@ const PrincipalPickupPage = (props) => {
     console.log('PRINCIPALPICKUP useEffect: after ', {releasedFromClassStudents});
   },[props.allStudents])
 
+
   const sendStudent = (student) => {
+    props.updateStatus(student.studentID, 'pickupReady')
+    sendStudentTwo(student);
+  }
+
+  const sendStudentTwo = (student) => {
     // console.log('PRINCIPALPICKUP sendStudent: ', 'studentID ', student.studentID);
     //Match to teacher
     let teacher = student.teacher;
@@ -85,9 +105,13 @@ const PrincipalPickupPage = (props) => {
     //TODO: Use teacher to send socket message, use sibTeachers to send socket message
     // console.log('student', student);
 
+    
+
     host.emit('joinRoom', teacher);
     console.log('principal has joined room: ', teacher);
     host.emit('pickupready', student);
+    
+
   }
 
   useEffect(() => {
@@ -98,12 +122,12 @@ const PrincipalPickupPage = (props) => {
     <>
       { console.log('inside return', chosenChild)}
       <form onSubmit={pickUpStudent}>
-        <input type='text' ref={pickupIdRef} />
-        <Button type='submit'>Submit</Button>
+        <input type='text' ref={pickupIdRef} placeholder="Enter Student ID #"/>
+        <Button type='submit'>Find Student</Button>
       </form>
       <div>
         <div>
-          {pickupReadyStudents.map((student, idx) => (
+          {waitingStudents.map((student, idx) => (
             <div key={idx}>
               <Chip
                 onClick={() => sendStudent(student)}
@@ -112,7 +136,24 @@ const PrincipalPickupPage = (props) => {
                 icon={<FaceIcon />}
                 label={`Send out ${student.name}`}
                 clickable
-                color="secondary"
+                color="default"
+                // style={{borderColor: 'gray', borderWidth: 2, margin: 3, marginLeft: 10}}
+              />
+            </div>
+          ))}
+        </div>
+        <div>
+          {pickupReadyStudents.map((student, idx) => (
+            <div key={idx}>
+              <Chip
+                onClick={() => sendStudent(student)}
+                variant="outlined"
+                size="medium"
+                icon={<FaceIcon />}
+                label={`${student.name} has been requested.`}
+                clickable
+                color="default"
+                style={{borderColor: 'red', borderWidth: 2, margin: 3, marginLeft: 10}}
               />
             </div>
           ))}
@@ -125,9 +166,10 @@ const PrincipalPickupPage = (props) => {
                 variant="outlined"
                 size="medium"
                 icon={<FaceIcon />}
-                label={`Send out ${student.name}`}
+                label={`${student.name} is on the way out.`}
                 clickable
-                color="primary"
+                color="default"
+                style={{borderColor: 'green', borderWidth: 2, margin: 3, marginLeft: 10}}
               />
             </div>
           ))}
