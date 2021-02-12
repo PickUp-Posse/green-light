@@ -124,7 +124,7 @@ const TeacherPage = (props) => {
         <form onSubmit={classList}>
 
           <input class="input-teacher" onChange={searchName} type='text' ref={teacherNameRef} placeholder="Teacher Name" />
-          <Button class="button" type='submit'>Submit</Button>
+          <Button className={classes.margin} type='submit' size="large">Submit</Button>
         </form>
 
         <div>
@@ -177,21 +177,40 @@ const TeacherPage = (props) => {
             ))}
           </div>
         </div>
-        <Button className={classes.root} class="button" id="button-id" onClick={updateStudent}>Click to Update a Student</Button>
+        <Button className={classes.root} id="button-id" size="large" onClick={updateStudent}>Update a Student</Button>
       </Card>
     </>
   )
 }
-
+//class="button"
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    justifyContent: 'right',
-    flexWrap: 'wrap',
+
     listStyle: 'none',
     padding: theme.spacing(1.5),
-    margin: 0,
+    margin: 10,
+    background: 'linear-gradient(45deg, #2A3EB1 10%, #2C387E 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .5)',
+    color: 'white',
+    height: 50,
+
+
+  },
+  margin: {
+    // display: 'flex',
+    // justifyContent: 'right',
+    // flexWrap: 'wrap',
+    background: 'linear-gradient(45deg, #2A3EB1 10%, #2C387E 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .5)',
+    color: 'white',
+    height: 45,
+    padding: '30px',
+    margin: theme.spacing(2),
   },
   chip: {
     margin: theme.spacing(1.0),
