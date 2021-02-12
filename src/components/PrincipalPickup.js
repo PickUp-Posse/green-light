@@ -18,7 +18,7 @@ const PrincipalPickupPage = (props) => {
   const pickupIdRef = React.createRef();
 
   // const host = io.connect('https://parent-pickup-coordinator.herokuapp.com/', { transports: ['websocket'] }); //USE THIS ONE FOR DEPLOYMENT
-  const host = io.connect('http://localhost:3002', { transports: ['websocket'] }); //USE THIS ONE FOR TESTING
+  const host = io.connect('http://localhost:3001', { transports: ['websocket'] }); //USE THIS ONE FOR TESTING
 
   host.on('sendingstudent', (payload) => {
     console.log('student is being sent out from teacher: ', payload.name, payload.teacher, payload.studentStatus);
@@ -27,9 +27,8 @@ const PrincipalPickupPage = (props) => {
 
   const pickUpStudent = (e) => {
     e.preventDefault();
-    e.target.reset();
     const pickupId = pickupIdRef.current.value;
-    // console.log('ID: ', pickupId);
+    console.log('ID: ', pickupId);
     let chosenStudent = props.allStudents.filter((child) => {
       if (child.studentID === parseInt(pickupId)) return child;
     })
@@ -41,6 +40,7 @@ const PrincipalPickupPage = (props) => {
     console.log('Student Array: ', tempArray)
     props.updateStatus(pickupId, 'pickupReady')
     // updatepickupReadyStudents();
+    // e.target.reset(); THIS WILL BREAK IT DO NOT USE!!!!!!!!!!!!!!!!!!!
   }
 
   // const updatepickupReadyStudents = () => {
