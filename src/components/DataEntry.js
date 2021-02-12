@@ -21,6 +21,15 @@ const DataEntry = (props) => {
   const [deleteStudentForm, setDeleteStudentForm] = useState(false);
   
   const pickupIdRef = React.createRef();
+  const studentNameRef = React.createRef();
+  const studentIDRef = React.createRef();
+  const studentGradeRef = React.createRef();
+  const studentTeacherRef = React.createRef();
+  const studentParentsRef = React.createRef();
+  const studentBusRef = React.createRef();
+  const studentDistrictRef = React.createRef();
+  const studentSchoolRef = React.createRef();
+  const studentSiblingsRef = React.createRef();
   
   // const studentIDref = React.createRef();
 
@@ -48,6 +57,9 @@ const DataEntry = (props) => {
     let chosenStudent = allStudentsData.filter((child) => {
       if (child.studentID === parseInt(studentId)) return child;
     })
+    if(chosenStudent.length < 1) {
+      chosenStudent[0] = {name: 'Enter Student Name', studentID: 0, grade: 0, teacher: 'Enter Teacher', busRoute: 'Enter Bus Route #', parents: 'Enter Parents', siblings: 'Enter Sibling ID #\'s', district: 'Enter School District #', schoolName: 'Enter School Name', studentStatus: 'classRoom'};
+    }
     setChosenChild(chosenStudent[0]);
   }
 
@@ -77,23 +89,72 @@ const DataEntry = (props) => {
     // console.log('DATA ENTRY useEffect: ', 'props.state ', props.state, 'props.allStudents ', props.allStudents);
   })
 
-  const addOneStudent = () => {
-    // console.log('inside dataEntry');
-    // superagent.post('https://parent-pickup-coordinator.herokuapp.com/student/')
-    //   .send({
-    //     "name": "mr. Whiskers",
-    //     "studentID": 5,
-    //     "grade": 5,
-    //     "teacher": "Mrs. Flower",
-    //     "parents": ["Nancy", "Kasey"],
-    //     "busRoute": 809,
-    //     "district": 8,
-    //     "schoolName": "Coe Elementary"
-    //   })
-    //   .then(response => {
-    //     console.log('Line 11 response body', response.body);
-    props.history.push('/add');
-    // })
+  const addStudentRecord = async () => {
+    console.log('DATAENTRY addStudentRecord');
+
+  let studentName = studentNameRef.current.value;
+  let studentID = studentIDRef.current.value;
+  let studentTeacher = studentTeacherRef.current.value;
+  let studentGrade = studentGradeRef.current.value;
+  let studentParents = studentParentsRef.current.value;
+  let studentBus = studentBusRef.current.value;
+  let studentDistrict = studentDistrictRef.current.value;
+  let studentSchool = studentSchoolRef.current.value;
+  let studentSiblings = studentSiblingsRef.current.value;
+
+    await superagent.post('https://parent-pickup-coordinator.herokuapp.com/student/')
+      .send({
+        "name": studentName,
+        "studentID": studentID,
+        "grade": studentGrade,
+        "teacher": studentTeacher,
+        "parents": [studentParents],
+        "busRoute": studentBus,
+        "district": studentDistrict,
+        "schoolName": studentSchool,
+        "siblings": [studentSiblings],
+        "studentStatus": "classRoom"
+      })
+      .then(response => {
+        console.log('Line 11 response body', response.body);
+        console.log('Student Added to DB');
+    })
+    setAddStudentForm(false);
+  }
+
+  const updateStudentRecord = async () => {
+    console.log('DATAENTRY updateStudentRecord');
+
+  let studentName = studentNameRef.current.value;
+  let studentID = studentIDRef.current.value;
+  let studentTeacher = studentTeacherRef.current.value;
+  let studentGrade = studentGradeRef.current.value;
+  let studentParents = studentParentsRef.current.value;
+  let studentBus = studentBusRef.current.value;
+  let studentDistrict = studentDistrictRef.current.value;
+  let studentSchool = studentSchoolRef.current.value;
+  let studentSiblings = studentSiblingsRef.current.value;
+
+  let id = chosenChild._id;
+
+    await superagent.put(`https://parent-pickup-coordinator.herokuapp.com/student/${id}`)
+      .send({
+        "name": studentName,
+        "studentID": studentID,
+        "grade": studentGrade,
+        "teacher": studentTeacher,
+        "parents": [studentParents],
+        "busRoute": studentBus,
+        "district": studentDistrict,
+        "schoolName": studentSchool,
+        "siblings": [studentSiblings],
+        "studentStatus": "classRoom"
+      })
+      .then(response => {
+        console.log('Line 11 response body', response.body);
+        console.log('Student Added to DB');
+    })
+    setUpdateStudentForm(false);
   }
 
   const deleteStudent = () => {
@@ -207,95 +268,95 @@ const DataEntry = (props) => {
 
 
     {(addStudentForm === false) ? <div></div> :
-      <Form onSubmit={() => handleUpdate(chosenChild)} >
+      <Form>
         <Form.Group>
           <Form.Label>Add a Student Record</Form.Label>
         </Form.Group>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Student Name</Form.Label>
-          <Form.Control name="studentName" type="text" defaultValue={chosenChild.name} onChange={handleInputChange}></Form.Control>
+          <Form.Control name="studentName" type="text" defaultValue={chosenChild.name} ref={studentNameRef}></Form.Control>
         </Form.Group>
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Student ID</Form.Label>
-          <Form.Control type="number" min="0" name="studentID" defaultValue={chosenChild.studentID} onChange={handleInputChange}></Form.Control>
+          <Form.Control type="number" min="0" name="studentID" defaultValue={chosenChild.studentID} ref={studentIDRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Grade</Form.Label>
-          <Form.Control defaultValue={chosenChild.grade} type="number" min="0" name="grade" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.grade} type="number" min="0" name="grade" ref={studentGradeRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Teacher</Form.Label>
-          <Form.Control defaultValue={chosenChild.teacher} type="text" name="teacher" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.teacher} type="text" name="teacher" ref={studentTeacherRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Parents</Form.Label>
-          <Form.Control defaultValue={chosenChild.parents} type="text" name="parents" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.parents} type="text" name="parents" ref={studentParentsRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Bus Route</Form.Label>
-          <Form.Control defaultValue={chosenChild.busRoute} type="text" name="busRoute" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.busRoute} type="text" name="busRoute" ref={studentBusRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>District</Form.Label>
-          <Form.Control defaultValue={chosenChild.district} type="text" name="district" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.district} type="text" name="district" ref={studentDistrictRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>School Name</Form.Label>
-          <Form.Control defaultValue={chosenChild.schoolName} type="text" name="schoolName" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.schoolName} type="text" name="schoolName" ref={studentSchoolRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Siblings(Enter Sibling ID#)</Form.Label>
-          <Form.Control defaultValue={chosenChild.siblings} type="text" name="siblings" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.siblings} type="text" name="siblings" ref={studentSiblingsRef}></Form.Control>
         </Form.Group>
-        <Button onClick={()=> setAddStudentForm(false)} variant="primary" type="submit">Cancel</Button>
-        <Button onClick={()=> setAddStudentForm(false)} variant="primary" type="submit">Add Student</Button>
+        <Button onClick={()=> setAddStudentForm(false)} variant="primary" type="button">Cancel</Button>
+        <Button onClick={addStudentRecord} variant="primary" type="button">Add Student</Button>
       </Form>
     }
 
 
     {(updateStudentForm === false) ? <div></div> :
-      <Form onSubmit={() => handleUpdate(chosenChild)} >
+      <Form>
         <Form.Group>
           <Form.Label>Record to Update</Form.Label>
         </Form.Group>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Student Name</Form.Label>
-          <Form.Control name="studentName" type="text" defaultValue={chosenChild.name} onChange={handleInputChange}></Form.Control>
+          <Form.Control name="studentName" type="text" defaultValue={chosenChild.name} ref={studentNameRef}></Form.Control>
         </Form.Group>
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Student ID</Form.Label>
-          <Form.Control type="number" min="0" name="studentID" defaultValue={chosenChild.studentID} onChange={handleInputChange}></Form.Control>
+          <Form.Control type="number" min="0" name="studentID" defaultValue={chosenChild.studentID} ref={studentIDRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Grade</Form.Label>
-          <Form.Control defaultValue={chosenChild.grade} type="number" min="0" name="grade" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.grade} type="number" min="0" name="grade" ref={studentGradeRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Teacher</Form.Label>
-          <Form.Control defaultValue={chosenChild.teacher} type="text" name="teacher" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.teacher} type="text" name="teacher" ref={studentTeacherRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Parents</Form.Label>
-          <Form.Control defaultValue={chosenChild.parents} type="text" name="parents" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.parents} type="text" name="parents" ref={studentParentsRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Bus Route</Form.Label>
-          <Form.Control defaultValue={chosenChild.busRoute} type="text" name="busRoute" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.busRoute} type="text" name="busRoute" ref={studentBusRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>District</Form.Label>
-          <Form.Control defaultValue={chosenChild.district} type="text" name="district" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.district} type="text" name="district" ref={studentDistrictRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>School Name</Form.Label>
-          <Form.Control defaultValue={chosenChild.schoolName} type="text" name="schoolName" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.schoolName} type="text" name="schoolName" ref={studentSchoolRef}></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Siblings(Enter Sibling ID#)</Form.Label>
-          <Form.Control defaultValue={chosenChild.siblings} type="text" name="siblings" onChange={handleInputChange}></Form.Control>
+          <Form.Control defaultValue={chosenChild.siblings} type="text" name="siblings" ref={studentSiblingsRef}></Form.Control>
         </Form.Group>
-        <Button onClick={()=> setUpdateStudentForm(false)} variant="primary" type="submit">Cancel</Button>
-        <Button onClick={()=> setUpdateStudentForm(false)} variant="primary" type="submit">Update Student</Button>
+        <Button onClick={()=> setUpdateStudentForm(false)} variant="primary" type="button">Cancel</Button>
+        <Button onClick={updateStudentRecord} variant="primary" type="button">Update Student</Button>
       </Form>
     }
 
