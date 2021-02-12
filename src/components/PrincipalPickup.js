@@ -112,7 +112,8 @@ const PrincipalPickupPage = (props) => {
                 icon={<FaceIcon />}
                 label={`Send out ${student.name}`}
                 clickable
-                color="secondary"
+                color="default"
+                style={{borderColor: 'red', borderWidth: 2, margin: 3, marginLeft: 10}}
               />
             </div>
           ))}
@@ -125,9 +126,10 @@ const PrincipalPickupPage = (props) => {
                 variant="outlined"
                 size="medium"
                 icon={<FaceIcon />}
-                label={`Send out ${student.name}`}
+                label={`${student.name} is on the way out.`}
                 clickable
-                color="primary"
+                color="default"
+                style={{borderColor: 'green', borderWidth: 2, margin: 3, marginLeft: 10}}
               />
             </div>
           ))}
