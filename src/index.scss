@@ -1,5 +1,43 @@
+html, body{
+  background: rgb(221, 220, 220);
+}
+
 form{
   width: 50%;
   margin-left: auto;
   margin-right: auto;
 }
+
+.button {
+  border: .5px black solid;
+  border-radius: 5px;
+  width: 185px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#button-id{
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  position: relative;
+  left: 115px;
+  width: 200px;
+}
+.input-teacher{
+  border: none;
+  border-bottom: 1px solid black;
+  outline: transparent;
+}
+
+#teacher-card{
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  margin-top: 30px;
+}
+// Chip {
+//   margin-bottom: 10px;
+// }

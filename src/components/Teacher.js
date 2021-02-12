@@ -4,15 +4,19 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import Card from '@material-ui/core/Card';
 import FaceIcon from '@material-ui/icons/Face';
 import superagent from 'superagent';
 import io from 'socket.io-client';
 import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import { populateStudents, updateStatus } from '../store/students-reducer.js';
 
 const mapDispatchToProps = { populateStudents, updateStatus };
 
 const TeacherPage = (props) => {
+  const classes = useStyles();
   const [name, setName] = useState('');
   const [pickupReadyStudents, setPickupReadyStudents] = useState([]);
   const [releasedFromClassStudents, setReleasedFromClassStudents] = useState([]);
@@ -21,8 +25,10 @@ const TeacherPage = (props) => {
   const teacherNameRef = React.createRef();
 
   // const host = io.connect('https://parent-pickup-coordinator.herokuapp.com/', { transports: ['websocket'] }); //USE THIS ONE FOR DEPLOYMENT
-  const host = io.connect('http://localhost:3001', { transports: ['websocket'] }); //USE THIS ONE FOR TESTING
-  
+
+  const host = io.connect('http://localhost:3000', { transports: ['websocket'] }); //USE THIS ONE FOR TESTING
+
+
   host.on('pickupready', (payload) => {
     console.log('this is the pickup on teacherPage, student:', payload.name);
     props.updateStatus(payload.studentID, payload.studentStatus);
@@ -68,10 +74,10 @@ const TeacherPage = (props) => {
 
   const studentReleased = (student) => {
     // console.log('TODO: make magic happen like a check mark');
-    console.log('TEACHER studentReleased: ', {student});
+    console.log('TEACHER studentReleased: ', { student });
     //Match to teacher
     student.studentStatus = 'releasedFromClass';
-    console.log('TEACHER studentReleased: updatedStatus ', {student});
+    console.log('TEACHER studentReleased: updatedStatus ', { student });
     props.updateStatus(student.ID, student.studentStatus);
     let teacher = student.teacher;
     //TODO: Use teacher to send socket message, use sibTeachers to send socket message
@@ -79,31 +85,31 @@ const TeacherPage = (props) => {
 
   }
 
-  useEffect (()=> {
+  useEffect(() => {
     //generate list of students that have status of pickupReady
-    console.log('PRINCIPALPICKUP useEffect: before ', {pickupReadyStudents});
+    console.log('PRINCIPALPICKUP useEffect: before ', { pickupReadyStudents });
     let studentsInProcess = props.classRoster.filter(student => {
-      if(student.studentStatus === 'pickupReady') return student;
-    }) 
+      if (student.studentStatus === 'pickupReady') return student;
+    })
     setPickupReadyStudents(studentsInProcess);
-    console.log('PRINCIPALPICKUP useEffect: after ', {pickupReadyStudents});
+    console.log('PRINCIPALPICKUP useEffect: after ', { pickupReadyStudents });
 
     //generate list of students that have a status of releasedFromClass
-    console.log('PRINCIPALPICKUP useEffect: before ', {releasedFromClassStudents});
+    console.log('PRINCIPALPICKUP useEffect: before ', { releasedFromClassStudents });
     let releasedStudents = props.classRoster.filter(student => {
-      if(student.studentStatus === 'releasedFromClass') return student;
-    }) 
+      if (student.studentStatus === 'releasedFromClass') return student;
+    })
     setReleasedFromClassStudents(releasedStudents);
-    console.log('PRINCIPALPICKUP useEffect: after ', {releasedFromClassStudents});
+    console.log('PRINCIPALPICKUP useEffect: after ', { releasedFromClassStudents });
 
     //generate list of students that have a status of classRoom
-    console.log('PRINCIPALPICKUP useEffect: before ', {inClassStudents});
+    console.log('PRINCIPALPICKUP useEffect: before ', { inClassStudents });
     let waitingStudents = props.classRoster.filter(student => {
-      if(student.studentStatus === 'classRoom') return student;
-    }) 
+      if (student.studentStatus === 'classRoom') return student;
+    })
     setInClassStudents(waitingStudents);
-    console.log('PRINCIPALPICKUP useEffect: after ', {inClassStudents});
-  },[props.classRoster])
+    console.log('PRINCIPALPICKUP useEffect: after ', { inClassStudents });
+  }, [props.classRoster])
 
   useEffect(() => {
     console.log('TEACHER useEffect: ', 'props.classRoster', props.classRoster);
@@ -113,69 +119,85 @@ const TeacherPage = (props) => {
 
     <>
       {/* { console.log('inside return', classRoster)} */}
-      <Button onClick={updateStudent}>Update Student</Button>
 
-      <form onSubmit={classList}>
-        <input onChange={searchName} type='text' ref={teacherNameRef} placeholder="Teacher Last Name"/>
-        <Button type='submit'>Submit</Button>
-      </form>
-      {/* <div>
-        {props.classRoster.map((student, idx) => (
-          <div key={idx}>
-            <p onClick={() => studentReleased(student)}>{student.name}</p>
+      <Card id="teacher-card" >
+        <form onSubmit={classList}>
+
+          <input class="input-teacher" onChange={searchName} type='text' ref={teacherNameRef} placeholder="Teacher Name" />
+          <Button class="button" type='submit'>Submit</Button>
+        </form>
+
+        <div>
+          <div>
+            {pickupReadyStudents.map((student, idx) => (
+              <div key={idx}>
+                <Chip
+
+                  onClick={() => studentReleased(student)}
+                  variant="outlined"
+                  size="medium"
+                  icon={<FaceIcon />}
+                  label={`${student.name}`}
+                  clickable
+                  color="secondary"
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div> */}
-      <div>
-        <div>
-          {pickupReadyStudents.map((student, idx) => (
-            <div key={idx}>
-              <Chip
-                onClick={() => studentReleased(student)}
-                variant="outlined"
-                size="medium"
-                icon={<FaceIcon />}
-                label={`${student.name}`}
-                clickable
-                color="secondary"
-              />
-            </div>
-          ))}
+          <div>
+            {inClassStudents.map((student, idx) => (
+              <div key={idx}>
+                <Chip
+
+                  onClick={() => studentReleased(student)}
+                  variant="outlined"
+                  size="medium"
+                  icon={<FaceIcon />}
+                  label={`${student.name}`}
+                  clickable
+                  color="gray"
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            {releasedFromClassStudents.map((student, idx) => (
+              <div key={idx}>
+                <Chip
+
+                  onClick={() => studentReleased(student)}
+                  variant="outlined"
+                  size="medium"
+                  icon={<FaceIcon />}
+                  label={`${student.name}`}
+                  clickable
+                  color="primary"
+                />
+              </div>
+            ))}
+          </div>
         </div>
-        <div>
-          {inClassStudents.map((student, idx) => (
-            <div key={idx}>
-              <Chip
-                onClick={() => studentReleased(student)}
-                variant="outlined"
-                size="medium"
-                icon={<FaceIcon />}
-                label={`${student.name}`}
-                clickable
-                color="gray"
-              />
-            </div>
-          ))}
-        </div>
-        <div>
-          {releasedFromClassStudents.map((student, idx) => (
-            <div key={idx}>
-              <Chip
-                onClick={() => studentReleased(student)}
-                variant="outlined"
-                size="medium"
-                icon={<FaceIcon />}
-                label={`${student.name}`}
-                clickable
-                color="primary"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+        <Button className={classes.root} class="button" id="button-id" onClick={updateStudent}>Click to Update a Student</Button>
+      </Card>
     </>
   )
 }
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'right',
+    flexWrap: 'wrap',
+    listStyle: 'none',
+    padding: theme.spacing(1.5),
+    margin: 0,
+  },
+  chip: {
+    margin: theme.spacing(1.0),
+    padding: theme.spacing(0.5),
+  },
+}));
 
 const mapStateToProps = state => ({
   state,
