@@ -7,6 +7,9 @@ import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import { connect } from 'react-redux';
 import { populateStudents, updateStatus } from '../store/students-reducer.js';
+import Card from '@material-ui/core/Card';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
 
 const mapDispatchToProps = { populateStudents, updateStatus };
 
@@ -45,6 +48,7 @@ const PrincipalPickupPage = (props) => {
     // e.target.reset(); THIS WILL BREAK IT DO NOT USE!!!!!!!!!!!!!!!!!!!
   }
 
+
   
   useEffect (()=> {
     console.log('PRINCIPALPICKUP useEffect: before ', {waitingStudents});
@@ -60,19 +64,20 @@ const PrincipalPickupPage = (props) => {
     console.log('PRINCIPALPICKUP useEffect: after ', {waitingStudents});
 
     console.log('PRINCIPALPICKUP useEffect: before ', {pickupReadyStudents});
-    let studentsInProcess = props.allStudents.filter(student => {
-      if(student.studentStatus === 'pickupReady') return student;
-    }) 
-    setPickupReadyStudents(studentsInProcess);
-    console.log('PRINCIPALPICKUP useEffect: after ', {pickupReadyStudents});
 
-    console.log('PRINCIPALPICKUP useEffect: before ', {releasedFromClassStudents});
+    let studentsInProcess = props.allStudents.filter(student => {
+      if (student.studentStatus === 'pickupReady') return student;
+    })
+    setPickupReadyStudents(studentsInProcess);
+    console.log('PRINCIPALPICKUP useEffect: after ', { pickupReadyStudents });
+
+    console.log('PRINCIPALPICKUP useEffect: before ', { releasedFromClassStudents });
     let releasedStudents = props.allStudents.filter(student => {
-      if(student.studentStatus === 'releasedFromClass') return student;
-    }) 
+      if (student.studentStatus === 'releasedFromClass') return student;
+    })
     setReleasedFromClassStudents(releasedStudents);
-    console.log('PRINCIPALPICKUP useEffect: after ', {releasedFromClassStudents});
-  },[props.allStudents])
+    console.log('PRINCIPALPICKUP useEffect: after ', { releasedFromClassStudents });
+  }, [props.allStudents])
 
 
   const sendStudent = (student) => {
@@ -118,15 +123,32 @@ const PrincipalPickupPage = (props) => {
     console.log('PRINCIPALPICKUP useEffect: ', 'props.state ', props.state, 'props.allStudents ', props.allStudents);
   })
 
+
+  const classes = useStyles();
+  /* <input type='text' /> */
   return (
     <>
       { console.log('inside return', chosenChild)}
-      <form onSubmit={pickUpStudent}>
-        <input type='text' ref={pickupIdRef} placeholder="Enter Student ID #"/>
-        <Button type='submit'>Find Student</Button>
-      </form>
-      <div>
+
+      <Card id="teacher-card" >
+
+        <form onSubmit={pickUpStudent}>
+
+          <TextField
+            //onSubmit={pickUpStudent}
+            ref={pickupIdRef}
+            id="outlined-with-placeholder"
+            label="Enter Student ID"
+            placeholder="Placeholder"
+            className={classes.textField}
+            margin="normal"
+            variant="outlined"
+          />
+// we removed the onSubmit that was previously placed on the button
+          <Button className={classes.root} type='submit'>Find Student</Button>
+        </form>
         <div>
+         <div>
           {waitingStudents.map((student, idx) => (
             <div key={idx}>
               <Chip
@@ -137,47 +159,128 @@ const PrincipalPickupPage = (props) => {
                 label={`Send out ${student.name}`}
                 clickable
                 color="default"
-                // style={{borderColor: 'gray', borderWidth: 2, margin: 3, marginLeft: 10}}
+                style={{borderColor: 'gray', borderWidth: 2, margin: 3, marginLeft: 10}}
               />
             </div>
           ))}
         </div>
         <div>
-          {pickupReadyStudents.map((student, idx) => (
-            <div key={idx}>
-              <Chip
-                onClick={() => sendStudent(student)}
-                variant="outlined"
-                size="medium"
-                icon={<FaceIcon />}
-                label={`${student.name} has been requested.`}
-                clickable
-                color="default"
-                style={{borderColor: 'red', borderWidth: 2, margin: 3, marginLeft: 10}}
-              />
-            </div>
-          ))}
+          <div>
+            {pickupReadyStudents.map((student, idx) => (
+              <div key={idx}>
+                <Chip
+                  onClick={() => sendStudent(student)}
+                  variant="outlined"
+                  size="medium"
+                  icon={<FaceIcon />}
+                  label={`${student.name} has been requested.`}
+                  clickable
+                  color="default"
+                  style={{borderColor: 'red', borderWidth: 2, margin: 3, marginLeft: 10}}
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            {releasedFromClassStudents.map((student, idx) => (
+              <div key={idx}>
+                <Chip
+                  onClick={() => sendStudent(student)}
+                  variant="outlined"
+                  size="medium"
+                  icon={<FaceIcon />}
+                  label={`${student.name} is on the way out.`}
+                  clickable
+                  color="default"
+                  style={{borderColor: 'green', borderWidth: 2, margin: 3, marginLeft: 10}}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-        <div>
-          {releasedFromClassStudents.map((student, idx) => (
-            <div key={idx}>
-              <Chip
-                onClick={() => sendStudent(student)}
-                variant="outlined"
-                size="medium"
-                icon={<FaceIcon />}
-                label={`${student.name} is on the way out.`}
-                clickable
-                color="default"
-                style={{borderColor: 'green', borderWidth: 2, margin: 3, marginLeft: 10}}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+      </Card>
+
+//       <form onSubmit={pickUpStudent}>
+//         <input type='text' ref={pickupIdRef} placeholder="Enter Student ID #"/>
+//         <Button type='submit'>Find Student</Button>
+//       </form>
+//        <div>
+//          <div>
+//           {waitingStudents.map((student, idx) => (
+//             <div key={idx}>
+//               <Chip
+//                 onClick={() => sendStudent(student)}
+//                 variant="outlined"
+//                 size="medium"
+//                 icon={<FaceIcon />}
+//                 label={`Send out ${student.name}`}
+//                 clickable
+//                 color="default"
+//                 // style={{borderColor: 'gray', borderWidth: 2, margin: 3, marginLeft: 10}}
+//               />
+//             </div>
+//           ))}
+//         </div>
+//         <div>
+//           {pickupReadyStudents.map((student, idx) => (
+//             <div key={idx}>
+//               <Chip
+//                 onClick={() => sendStudent(student)}
+//                 variant="outlined"
+//                 size="medium"
+//                 icon={<FaceIcon />}
+//                 label={`${student.name} has been requested.`}
+//                 clickable
+//                 color="default"
+//                 style={{borderColor: 'red', borderWidth: 2, margin: 3, marginLeft: 10}}
+//               />
+//             </div>
+//           ))}
+//         </div>
+//         <div>
+//           {releasedFromClassStudents.map((student, idx) => (
+//             <div key={idx}>
+//               <Chip
+//                 onClick={() => sendStudent(student)}
+//                 variant="outlined"
+//                 size="medium"
+//                 icon={<FaceIcon />}
+//                 label={`${student.name} is on the way out.`}
+//                 clickable
+//                 color="default"
+//                 style={{borderColor: 'green', borderWidth: 2, margin: 3, marginLeft: 10}}
+//               />
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+
     </>
   )
 }
+
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+  root: {
+    background: 'linear-gradient(45deg, #2A3EB1 10%, #2C387E 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .5)',
+    color: 'white',
+    height: 20,
+    padding: '30px',
+    margin: theme.spacing(1),
+  },
+}));
+
 
 const mapStateToProps = state => ({
   state,
